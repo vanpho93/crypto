@@ -42,9 +42,7 @@ function insertUser(username, password, email, cbCheckInsert){
   queryDB(sql, function(){}, cbCheckInsert);
 }
 
-insertUser("pho", "sdnf", "vanpho93@gmail.com",function(result){
-  console.log(result);
-});
+module.exports.checkSignIn = checkSignIn;
 
 // checkSignIn("vanpho93", "123456", function(){}, function(result){
 //   if(result.rowCount < 1){
