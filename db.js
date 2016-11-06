@@ -1,3 +1,4 @@
+var crypto = require('./crypto.js');
 var pg = require('pg');
 var config = {
   user: 'postgres',
@@ -29,15 +30,14 @@ function queryDB(sql, onError, onSuccess){
 
 function checkSignIn(username, password, onError, onSuccessQuery){
   var sql = 'SELECT * FROM "user" WHERE "username" = '
-            + "'" + username  + "'" + '  AND "password" = '
-            + "'" + password  + "'";
+            + "'" + username  + "'"
   queryDB(sql, onError, onSuccessQuery);
 }
 
 function insertUser(username, password, email, cbCheckInsert){
   var sql = 'INSERT INTO "user"("username", "password", "email") VALUES('
             + "'" + username  + "',"
-            + "'" + password  + "',"
+            + "'" + crypto.encrypt(password)  + "',"
             + "'" + email  + "')";
   queryDB(sql, function(){}, cbCheckInsert);
 }

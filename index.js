@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var database = require('./db.js');
+var crypto = require('./crypto.js');
 var bodyParser = require('body-parser');
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -16,9 +17,17 @@ app.post('/signin', parser, function(req, res){
   var username = req.body.username;
   var password = req.body.password;
   database.checkSignIn(username, password, onError, function(result){
-    var msg = result.rowCount == 1?
-              "Dang nhap thanh cong":
-              "Dang nhap that bai";
+    var msg;
+    if(result.rowCount == 1){
+      var dbPass = result.rows[0].password;
+      console.log('dbPass: ' + crypto.decrypt(dbPass));
+      console.log('mu pass: ' + password);
+      msg = password == crypto.decrypt(dbPass)?
+            "Dang nhap thanh cong":
+            "Kiem tra password";
+    }else{
+      msg= "Username khong ton tai";
+    }
     res.send(msg);
   });
 });
