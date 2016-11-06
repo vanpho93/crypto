@@ -27,6 +27,17 @@ app.get('/signup', function(req, res){
   res.render('signup');
 });
 
+app.post('/formSignUp', parser, function(req, res){
+  var username = req.body.username;
+  var password = req.body.password;
+  var email = req.body.email;
+  database.insertUser(username, password, email, function(result){
+    var msg = result.rowCount == 1?
+              "Dang ky thanh cong":
+              "Dang ky that bai";
+    res.send(msg);
+  });
+});
 
 function onError(err){
   console.log(err);

@@ -43,6 +43,7 @@ function insertUser(username, password, email, cbCheckInsert){
 }
 
 module.exports.checkSignIn = checkSignIn;
+module.exports.insertUser = insertUser;
 
 // checkSignIn("vanpho93", "123456", function(){}, function(result){
 //   if(result.rowCount < 1){
