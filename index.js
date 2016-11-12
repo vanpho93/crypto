@@ -17,38 +17,42 @@ app.use(session({
 }));
 
 app.use(function(req, res, next){
-  var daMV = req.session.daMuaVe
+  var daMV = req.session.daDangNhap
   req.session.regenerate(function(err) {
   // will have a new session here
     if(daMV){
         //console.log(req.session.daMuaVe);
-        req.session.daMuaVe = true;
+        req.session.daDangNhap = true;
     }else{
-      req.session.daMuaVe = false;
+      req.session.daDangNhap = false;
     }
     next();
   })
 
 });
 
-app.get('/muave', function(req, res){
-    req.session.daMuaVe = true;
-    res.send('Da mua ve ' + req.session);
-});
-
-app.get('/vaorap', function(req, res){
-
-    if(req.session.daMuaVe){
-      res.send('Welcome!')
-    }else{
-      res.send('<a href="/muave">Hay mua ve</a>');
-    }
-});
+// app.get('/muave', function(req, res){
+//     req.session.daMuaVe = true;
+//     res.send('Da mua ve ' + req.session);
+// });
+//
+// app.get('/vaorap', function(req, res){
+//
+//     if(req.session.daMuaVe){
+//       res.send('Welcome!')
+//     }else{
+//       res.send('<a href="/muave">Hay mua ve</a>');
+//     }
+// });
 
 var parser = bodyParser.urlencoded({extended: false});
 
 app.get('/', function(req, res){
-  res.render('homepage');
+  if(req.session.daDangNhap){
+    res.render('tintuc');
+  }else{
+    res.render('homepage');
+  }
 });
 
 app.post('/signin', parser, function(req, res){
@@ -63,6 +67,11 @@ app.post('/signin', parser, function(req, res){
       msg = password == crypto.decrypt(dbPass)?
             "Dang nhap thanh cong":
             "Kiem tra password";
+      if(password == crypto.decrypt(dbPass)){
+          req.session.daDangNhap = true;
+      }else{
+          req.session.daDangNhap = false;
+      }
     }else{
       msg= "Username khong ton tai";
     }
