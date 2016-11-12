@@ -11,13 +11,23 @@ app.listen(3000);
 
 app.use(session({
   secret: 'jhg32!@hjdc8^3',
-  resave: false,
-  saveUninitialized: true
+  resave: true,
+  saveUninitialized: true,
+  cookie: {maxAge: 10000}
 }));
+
+app.use(function(req, res, next){
+  req.session.regenerate(function(err) {
+  // will have a new session here
+    req.session.daMuaVe = true;
+    next();
+  })
+
+});
 
 app.get('/muave', function(req, res){
     req.session.daMuaVe = true;
-    res.send('Da mua ve');
+    res.send('Da mua ve ' + req.session);
 });
 
 app.get('/vaorap', function(req, res){
