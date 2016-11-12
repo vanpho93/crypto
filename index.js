@@ -17,9 +17,15 @@ app.use(session({
 }));
 
 app.use(function(req, res, next){
+  var daMV = req.session.daMuaVe
   req.session.regenerate(function(err) {
   // will have a new session here
-    req.session.daMuaVe = true;
+    if(daMV){
+        //console.log(req.session.daMuaVe);
+        req.session.daMuaVe = true;
+    }else{
+      req.session.daMuaVe = false;
+    }
     next();
   })
 
@@ -31,6 +37,7 @@ app.get('/muave', function(req, res){
 });
 
 app.get('/vaorap', function(req, res){
+
     if(req.session.daMuaVe){
       res.send('Welcome!')
     }else{
